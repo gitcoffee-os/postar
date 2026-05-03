@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { h, defineComponent } from 'vue'
+import { h, defineComponent, inject } from 'vue'
+import { StyleProvider } from 'ant-design-vue/es/_util/cssinjs'
+import { ConfigProvider } from 'ant-design-vue'
 import { createModal } from '@gitcoffee/postbot-content-ui'
 import PostarFloatButton from './PostarFloatButton'
 import { getReaderData } from '~/media/parser'
@@ -22,22 +24,26 @@ import { POSTAR_ACTION } from '~/message/postar.action';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';
 import iconUrl from '~/assets/icon.png';
 
-const PostarModalInner = createModal({
-  state,
-  iconUrl,
-  assistantLabel: 'Postar Content Sync Assistant',
-  previewLabel: 'Content Preview',
-  syncNowLabel: 'Sync Now',
-  cancelLabel: 'Cancel',
-  getBaseUrl: getPostarBaseUrl,
-  publishPath: getPublishPath(),
-  actionSyncData: POSTAR_ACTION.PUBLISH_SYNC_DATA,
-  getReaderData,
-});
-
 export default defineComponent({
   name: 'PostarModal',
   setup() {
+    const shadowRoot = inject<ShadowRoot>('postar-shadow-root');
+    const shadowContainer = inject<HTMLElement>('postar-shadow-container');
+
+    const PostarModalInner = createModal({
+      state,
+      iconUrl,
+      assistantLabel: 'Postar Content Sync Assistant',
+      previewLabel: 'Content Preview',
+      syncNowLabel: 'Sync Now',
+      cancelLabel: 'Cancel',
+      getBaseUrl: getPostarBaseUrl,
+      publishPath: getPublishPath(),
+      actionSyncData: POSTAR_ACTION.PUBLISH_SYNC_DATA,
+      getReaderData,
+      ...(shadowContainer ? { getContainer: () => shadowContainer } : {}),
+    });
+
     const handleClick = () => {
       chrome.runtime.sendMessage({ type: 'request', action: 'checkLogin' }, (response) => {
         if (response?.isLogin) {
@@ -49,15 +55,27 @@ export default defineComponent({
       });
     }
 
+    const getPopupContainer = shadowContainer ? () => shadowContainer : undefined;
+
     return () =>
-      h('div', {
-        style: {
-          width: '100%',
-          height: '100%',
-        }
-      }, [
-        state.showFlowButton ? h(PostarFloatButton, { onClick: handleClick }) : null,
-        h(PostarModalInner),
-      ])
+      h(StyleProvider, {
+        container: shadowRoot,
+      }, {
+        default: () =>
+          h(ConfigProvider, {
+            getPopupContainer,
+          }, {
+            default: () =>
+              h('div', {
+                style: {
+                  width: '100%',
+                  height: '100%',
+                }
+              }, [
+                state.showFlowButton ? h(PostarFloatButton, { onClick: handleClick }) : null,
+                h(PostarModalInner),
+              ])
+          })
+      })
   }
 })

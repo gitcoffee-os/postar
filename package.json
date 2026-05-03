@@ -39,7 +39,7 @@
     "@gitcoffee/postbot-tabs": "^1.0.0",
     "@gitcoffee/storage": "^1.0.0",
     "@gitcoffee/store": "^1.0.0",
-    "@mozilla/readability": "^0.5.0",
+    "@mozilla/readability": "^0.6.0",
     "ant-design-vue": "^4.2.6",
     "dayjs": "^1.11.13",
     "pinia": "^3.0.4",

@@ -17,23 +17,40 @@ import { createApp } from 'vue';
 import PostarModal from '~/content/components/PostarModal';
 import { getReaderData } from '~/media/parser';
 import { debounce as debounceUtils } from '@gitcoffee/postbot-utils';
-import { initMessageEventListener } from '~/content/messageEventListener';
+import { initMessageEventListener } from '@gitcoffee/postbot-content-services';
 import { handleMessage } from '~/content/messageHandler';
 import { setupI18n } from '~/locales';
-import 'ant-design-vue/dist/reset.css';
+import { processContent } from '@gitcoffee/postbot-content-adapter';
+import antDesignCss from 'ant-design-vue/dist/reset.css?inline';
+import globalCss from '~/styles/global.css?inline';
 
 export default {
   matches: ['<all_urls>'],
   main() {
     initMessageEventListener();
 
-    const app = createApp(PostarModal);
+    const host = document.createElement('div');
+    host.id = 'postar-host';
+    host.style.cssText = 'position: fixed; top: 0; left: 0; width: 0; height: 0; overflow: visible; z-index: 2147483647;';
 
-    setupI18n(app);
+    const shadowRoot = host.attachShadow({ mode: 'open' });
+
+    const styleEl = document.createElement('style');
+    styleEl.textContent = antDesignCss + '\n' + globalCss;
+    shadowRoot.appendChild(styleEl);
 
     const container = document.createElement('div');
     container.id = 'postar-container';
-    document.body.appendChild(container);
+    shadowRoot.appendChild(container);
+
+    document.body.appendChild(host);
+
+    const app = createApp(PostarModal);
+
+    app.provide('postar-shadow-root', shadowRoot);
+    app.provide('postar-shadow-container', container);
+
+    setupI18n(app);
 
     app.mount(container);
 
@@ -65,18 +82,19 @@ export default {
       if (hasSelection) {
         try {
           const range = selection!.getRangeAt(0);
-
-          const selectedHTMLForContent = range.cloneContents();
-          const selectedHTMLForImages = range.cloneContents();
-
+          const selectedHTML = range.cloneContents();
           const serializer = new XMLSerializer();
-          const htmlContent = serializer.serializeToString(selectedHTMLForContent);
-          selectionData.selectionContent = htmlContent;
+          const htmlContent = serializer.serializeToString(selectedHTML);
+          const processedHtml = processContent(htmlContent);
+
+          selectionData.selectionContent = processedHtml;
 
           const tempDiv = document.createElement('div');
-          tempDiv.appendChild(selectedHTMLForImages);
+          tempDiv.innerHTML = processedHtml;
           const imgElements = tempDiv.querySelectorAll('img');
-          const selectedImages = Array.from(imgElements).map((img) => ({ src: img.src }));
+          const selectedImages = Array.from(imgElements)
+            .filter((img) => img.src && !img.src.startsWith('chrome-extension://'))
+            .map((img) => ({ src: img.src }));
           selectionData.selectionImages = selectedImages;
         } catch (error) {
           console.error('Error with range operations:', error);
