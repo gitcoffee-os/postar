@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFloatButton } from '@gitcoffee/postbot-content-ui';
-import { useTranslation } from '~/locales';
-import iconUrl from '~/assets/icon.png';
+import { defineComponent, h } from 'vue'
+import { Button } from 'ant-design-vue'
+import { SyncOutlined } from '@ant-design/icons-vue';
 
-const PostarFloatButton = createFloatButton({
-  storageKey: 'postar-float-button-position',
-  iconUrl,
-  syncLabel: () => useTranslation()('postar:postar.content_sync'),
-  tooltipLabel: () => useTranslation()('postar:postar.content_sync_assistant'),
-});
+export default defineComponent({
+  name: 'PostarButton',
+  setup(props, { emit }) {
+    const handleClick = () => {
+      emit('click');
+    }
 
-export default PostarFloatButton;
+    return () =>
+      h('div', { style: { position: 'fixed', top: '200px', right: '10px', zIndex: 9999 } }, [
+        h(Button, { type: 'primary', icon: h(SyncOutlined), style: { backgroundColor: '#bd34fe' }, onClick: handleClick }, 'Sync')
+      ])
+  }
+})

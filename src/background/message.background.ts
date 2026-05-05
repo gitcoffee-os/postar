@@ -15,12 +15,13 @@
  */
 import { createMessageHandler } from '@gitcoffee/postbot-background';
 import { state } from '~/content/components/postar.data';
-import { getSupportedPlatforms, windowPublish } from '~/media/publisher';
+import { windowPublish } from '~/media/publisher';
+import { getPlatforms } from '~/media/platform';
 import { getMetaInfoList } from '~/media/meta';
 import { user } from '@gitcoffee/postbot-api';
 
 export const handleMessage = createMessageHandler({
-  getPlatforms: (type?: string) => getSupportedPlatforms()[type || 'article'],
+  getPlatforms: (type?: string) => getPlatforms()[type || 'article'],
   getMetaInfoList: async () => {
     const metaInfoList = await getMetaInfoList();
     state.metaInfoList = metaInfoList;
@@ -31,7 +32,7 @@ export const handleMessage = createMessageHandler({
   windowPublish: (data: any) => {
     const mediaType = data.mediaType || 'article';
     const platformCodes = data.platformCodes;
-    const publishPlatforms = getSupportedPlatforms();
+    const publishPlatforms = getPlatforms();
     const allPlatforms = Object.values(publishPlatforms[mediaType]);
     const checkedPlatforms = allPlatforms.filter((item: any) => platformCodes.includes(item.code));
     checkedPlatforms.forEach((item: any) => {

@@ -18,9 +18,10 @@ import PostarModal from '~/content/components/PostarModal';
 import { getReaderData } from '~/media/parser';
 import { debounce as debounceUtils } from '@gitcoffee/postbot-utils';
 import { initMessageEventListener } from '@gitcoffee/postbot-content-services';
-import { handleMessage } from '~/content/messageHandler';
+import { handleMessage } from '~/content/services/message.services';
 import { setupI18n } from '~/locales';
 import { processContent } from '@gitcoffee/postbot-content-adapter';
+import { startMediaSyncMessageListener, stopMediaSyncMessageListener } from '~/utils/media';
 import antDesignCss from 'ant-design-vue/dist/reset.css?inline';
 import globalCss from '~/styles/global.css?inline';
 
@@ -28,6 +29,7 @@ export default {
   matches: ['<all_urls>'],
   main() {
     initMessageEventListener();
+    startMediaSyncMessageListener();
 
     const host = document.createElement('div');
     host.id = 'postar-host';
@@ -50,7 +52,7 @@ export default {
     app.provide('postar-shadow-root', shadowRoot);
     app.provide('postar-shadow-container', container);
 
-    setupI18n(app);
+    setupI18n(app, 'en');
 
     app.mount(container);
 
@@ -119,6 +121,10 @@ export default {
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       handleMessage(request, sender, sendResponse);
       return true;
+    });
+
+    window.addEventListener('unload', () => {
+      stopMediaSyncMessageListener();
     });
   }
 };

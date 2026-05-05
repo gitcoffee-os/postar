@@ -122,3 +122,35 @@ export const handleGetSyncImages = async (request: any, event: MessageEvent) => 
     });
   });
 };
+
+let messageEventHandler: ((event: MessageEvent) => void) | null = null;
+
+export const startMediaSyncMessageListener = () => {
+  messageEventHandler = async (event: MessageEvent) => {
+    const request = event.data;
+
+    if (request?.type !== 'request' || !request?.action) {
+      return;
+    }
+
+    if (!isValidOrigin(event.origin)) {
+      console.warn('[MediaSync] Untrusted origin:', event.origin);
+      return;
+    }
+
+    if (request.action === media.MEDIA_SYNC_ACTION.GET_SYNC_IMAGES) {
+      await handleGetSyncImages(request, event);
+    }
+  };
+
+  window.addEventListener('message', messageEventHandler);
+  console.log('[MediaSync] Message listener started');
+};
+
+export const stopMediaSyncMessageListener = () => {
+  if (messageEventHandler) {
+    window.removeEventListener('message', messageEventHandler);
+    messageEventHandler = null;
+    console.log('[MediaSync] Message listener stopped');
+  }
+};

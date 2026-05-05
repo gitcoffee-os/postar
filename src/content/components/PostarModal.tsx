@@ -22,6 +22,7 @@ import { getReaderData } from '~/media/parser'
 import { state } from './postar.data';
 import { POSTAR_ACTION } from '~/message/postar.action';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';
+import { useTranslation } from '~/locales';
 import iconUrl from '~/assets/icon.png';
 
 export default defineComponent({
@@ -33,10 +34,10 @@ export default defineComponent({
     const PostarModalInner = createModal({
       state,
       iconUrl,
-      assistantLabel: 'Postar Content Sync Assistant',
-      previewLabel: 'Content Preview',
-      syncNowLabel: 'Sync Now',
-      cancelLabel: 'Cancel',
+      assistantLabel: () => useTranslation()('postar:postar.content_sync_assistant'),
+      previewLabel: () => useTranslation()('postar:postar.content_preview'),
+      syncNowLabel: () => useTranslation()('postar:postar.sync_now'),
+      cancelLabel: () => useTranslation()('postar:common.cancel'),
       getBaseUrl: getPostarBaseUrl,
       publishPath: getPublishPath(),
       actionSyncData: POSTAR_ACTION.PUBLISH_SYNC_DATA,

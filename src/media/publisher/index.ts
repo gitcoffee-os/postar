@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { publish, getSupportedPlatforms } from '@gitcoffee/postbot-media';
-import { createTabsForPlatforms } from '@gitcoffee/postbot-tabs';
+import { publish } from '@gitcoffee/postbot-media';
+import { createTabsForPlatformsWithScript } from '~/tabs';
 import { getMetaInfoList } from '../meta';
 
-export { publish, getSupportedPlatforms };
+export { publish };
 
 export const getPlatformMetaInfoList = () => {
   return getMetaInfoList();
@@ -30,7 +30,5 @@ export const windowPublish = (data: any) => {
     if (data?.platforms.length === 0) {
         return;
     }
-    createTabsForPlatforms(data, (tabs, data) => {
-        console.log('Postar: publishing to tabs', tabs.length);
-    }, 'Postar');
+    createTabsForPlatformsWithScript(data);
 }

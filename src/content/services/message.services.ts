@@ -13,29 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { initPostar } from '~/api';
-import { initPostarEvents } from '../events';
-import { initPlugins } from '../plugins';
-import { handleMessage } from '../background';
-import { createBackgroundListener } from '@gitcoffee/postbot-background';
+import { createMessageHandler } from '@gitcoffee/postbot-content-services';
+import { getReaderData } from '~/media/parser';
+import { state } from '../components/postar.data';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';
+import { POSTAR_ACTION } from '~/message/postar.action';
+import { getMetaInfoList } from '~/media/meta';
 
-const backgroundMain = () => {
-  console.log('Postar background script loaded');
-
-  initPostar();
-  initPlugins();
-  initPostarEvents();
-
-  chrome.action.onClicked.addListener(() => {
-    chrome.tabs.create({ url: `${getPostarBaseUrl()}${getPublishPath()}` });
-  });
-
-  createBackgroundListener(handleMessage);
-};
-
-export default {
-  main() {
-    backgroundMain();
-  }
-};
+export const handleMessage = createMessageHandler({
+  state,
+  getReaderData,
+  getBaseUrl: getPostarBaseUrl,
+  publishPath: getPublishPath(),
+  actionSyncData: POSTAR_ACTION.PUBLISH_SYNC_DATA,
+  getMetaInfoList,
+});

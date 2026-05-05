@@ -13,11 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createMetaRegistry } from '@gitcoffee/postbot-media';
+import { metaInfoList as enMetaInfoList } from '@gitcoffee/postbot-publisher-en';
 
-const metaRegistry = createMetaRegistry();
+export const metaInfoList = enMetaInfoList;
 
-export const registerPlatformMeta = metaRegistry.registerPlatformMeta;
-export const getPlatformMeta = metaRegistry.getPlatformMeta;
-export const getAllPlatformMetas = metaRegistry.getAllPlatformMetas;
-export const getMetaInfoList = metaRegistry.getMetaInfoList;
+export const getMetaInfoList = async () => {
+    const results = await Promise.all(
+        Object.keys(metaInfoList).map(async (key) => {
+            let metaInfo: Record<string, any> = {};
+            const meta = metaInfoList[key];
+            if (meta != null) {
+                try {
+                    const mediaInfo = await meta?.getMediaInfo();
+                    if (mediaInfo) {
+                        mediaInfo[key] = key;
+                        metaInfo = {
+                            [key]: mediaInfo
+                        };
+                    }
+                } catch (e) {
+                    console.error('Failed to get meta info', e);
+                }
+            }
+            return metaInfo;
+        })
+    );
+
+    const metaInfos = results.reduce((acc: Record<string, any>, currentData) => {
+        return { ...acc, ...currentData };
+    }, {});
+
+    return metaInfos;
+}

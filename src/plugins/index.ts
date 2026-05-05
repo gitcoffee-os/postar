@@ -17,6 +17,10 @@ import { pluginRegistry, setupInjection, PluginType, PluginBase, PublisherConfig
 import { publishEngine } from '@gitcoffee/postbot-publish-engine';
 import { registerEnPlatforms, platformMetas as enPlatformMetas, metaInfoList as enMetaInfoList, publisher as enPublisher } from '@gitcoffee/postbot-publisher-en';
 
+import { platformMetas, platforms } from '~/media/platform';
+import { metaInfoList } from '~/media/meta';
+import { publisher } from '~/media/publisher/publisher.script';
+
 const pluginBaseEn: PluginBase = {
   code: 'en',
   name: 'International Publisher Plugin',
@@ -51,6 +55,16 @@ const enPlugin = {
 };
 
 export const initPlugins = () => {
+  setupInjection({
+    platformMetas,
+    platforms,
+    metaInfoList,
+    publisher,
+  });
+
   pluginRegistry.register(pluginBaseEn, pluginConfigEn, pluginImplementationEn, enPlugin.modules);
+
+  pluginImplementationEn.initialize();
+
   console.log(`Postar: EN publisher plugin initialized`);
 };

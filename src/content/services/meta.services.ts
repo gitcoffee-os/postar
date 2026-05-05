@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFloatButton } from '@gitcoffee/postbot-content-ui';
-import { useTranslation } from '~/locales';
-import iconUrl from '~/assets/icon.png';
+import { getMetaInfoList } from '~/media/meta';
 
-const PostarFloatButton = createFloatButton({
-  storageKey: 'postar-float-button-position',
-  iconUrl,
-  syncLabel: () => useTranslation()('postar:postar.content_sync'),
-  tooltipLabel: () => useTranslation()('postar:postar.content_sync_assistant'),
-});
-
-export default PostarFloatButton;
+export const handleMetaMessage = async (request: any, sender: any, sendResponse: any) => {
+    switch (request.action) {
+        case 'getMetaInfoList':
+            const metaInfoList = await getMetaInfoList();
+            sendResponse(metaInfoList);
+            break;
+        default:
+            break;
+    }
+}

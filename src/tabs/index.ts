@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { createTabsForPlatforms, tabsState } from '@gitcoffee/postbot-tabs';
+import { executeScriptsToTabs } from '~/media/publisher/publisher.script';
 
 export { tabsState };
 
@@ -41,7 +42,5 @@ export const addTabToTabGroup = async (tabIds: number[], groupId: number) => {
 }
 
 export const createTabsForPlatformsWithScript = (data: any) => {
-    return createTabsForPlatforms(data, () => {
-        console.log('Postar: publishing to tabs');
-    }, 'Postar Content Sync Assistant');
+    return createTabsForPlatforms(data, executeScriptsToTabs, 'Postar Content Sync Assistant');
 }

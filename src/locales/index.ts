@@ -55,9 +55,17 @@ export const useTranslation = () => {
   const currentLanguageRef = currentLanguage;
   const translate = (key: string, params?: any): string => {
     currentLanguageRef.value;
-    return coreT(key, params);
+    return coreT(resolveKey(key), params);
   };
   return translate;
+};
+
+const resolveKey = (key: string): string => {
+  const colonIndex = key.indexOf(':');
+  if (colonIndex !== -1) {
+    return key.substring(colonIndex + 1);
+  }
+  return key;
 };
 
 export const useCurrentLanguage = () => {
@@ -68,6 +76,13 @@ export const setupI18n = async (app: App, defaultLanguage?: string) => {
   const i18n = await initI18n();
   app.use(i18n);
   app.use(i18nPlugin);
+  if (defaultLanguage) {
+    localeManager.setLanguage(defaultLanguage);
+  }
+};
+
+export const ensureI18n = async (defaultLanguage?: string) => {
+  await initI18n();
   if (defaultLanguage) {
     localeManager.setLanguage(defaultLanguage);
   }

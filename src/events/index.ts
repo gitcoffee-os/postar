@@ -44,6 +44,11 @@ export const initPostarEvents = () => {
         checkLoginAndSend(tab, CONTEXT_MENU_ACTION.SYNC_PAGE);
       },
     },
+    contextMenuTitles: {
+      syncSelection: 'Sync Selection',
+      syncImage: 'Sync Image',
+      syncPage: 'Sync Page',
+    },
     copy: true,
   });
 };

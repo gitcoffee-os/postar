@@ -16,6 +16,8 @@
 import { authority } from '@gitcoffee/postbot-api';
 import { syncImages } from '@gitcoffee/postbot-media';
 
+export { getDocument, getImgElements, handleContentImage } from './image.handler';
+
 const syncImagesToMedia = async (images: { src: string }[], label: string) => {
   try {
     const syncedImages = await syncImages(images);
