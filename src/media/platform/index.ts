@@ -19,222 +19,52 @@ const createPlatform = (type: string, code: string, customProps: Record<string, 
 
 export const platforms = reactive({
     article: {
-        medium: createPlatform('article', 'medium', {
-            name: 'Medium',
-            publishUrl: 'https://medium.com/new-story',
-            sort: 1,
-            status: 'enabled',
-        }),
-        devto: createPlatform('article', 'devto', {
-            name: 'Dev.to',
-            publishUrl: 'https://dev.to/new',
-            sort: 2,
-            status: 'enabled',
-        }),
-        github: createPlatform('article', 'github', {
-            name: 'GitHub',
-            publishUrl: 'https://github.com/new',
-            sort: 3,
-            status: 'enabled',
-        }),
-        hashnode: createPlatform('article', 'hashnode', {
-            name: 'Hashnode',
-            publishUrl: 'https://hashnode.com/new-story',
-            sort: 4,
-            status: 'enabled',
-        }),
-        blogger: createPlatform('article', 'blogger', {
-            name: 'Blogger',
-            publishUrl: 'https://www.blogger.com/create-post.g',
-            sort: 5,
-            status: 'enabled',
-        }),
-        wordpress: createPlatform('article', 'wordpress', {
-            name: 'WordPress.com',
-            publishUrl: 'https://wordpress.com/post',
-            sort: 6,
-            status: 'enabled',
-        }),
-        substack: createPlatform('article', 'substack', {
-            name: 'Substack',
-            publishUrl: 'https://substack.com/publish',
-            sort: 7,
-            status: 'enabled',
-        }),
-        ghost: createPlatform('article', 'ghost', {
-            name: 'Ghost',
-            publishUrl: 'https://ghost.org/login/',
-            sort: 8,
-            status: 'enabled',
-        }),
-        x: createPlatform('article', 'x', {
-            name: 'X',
-            publishUrl: 'https://x.com/compose/note',
-            sort: 9,
-            status: 'enabled',
-        }),
+        facebook: createPlatform('article', 'facebook', { sort: 1 }),
+        linkedin: createPlatform('article', 'linkedin', { sort: 2 }),
+        instagram: createPlatform('article', 'instagram', { sort: 3 }),
+        x: createPlatform('article', 'x', { sort: 4, name: 'X(Premium)', platformName: 'X(Premium)' }),
+        reddit: createPlatform('article', 'reddit', { sort: 5 }),
+        threads: createPlatform('article', 'threads', { sort: 6 }),
+        bluesky: createPlatform('article', 'bluesky', { sort: 7 }),
+        medium: createPlatform('article', 'medium', { sort: 8 }),
+        substack: createPlatform('article', 'substack', { sort: 9 }),
+        devto: createPlatform('article', 'devto', { sort: 10 }),
+        hashnode: createPlatform('article', 'hashnode', { sort: 11 }),
+        github: createPlatform('article', 'github', { sort: 12 }),
+        wordpress: createPlatform('article', 'wordpress', { sort: 13 }),
+        blogger: createPlatform('article', 'blogger', { sort: 14 }),
+        ghost: createPlatform('article', 'ghost', { sort: 15 }),
     },
     moment: {
-        linkedin: createPlatform('moment', 'linkedin', {
-            name: 'LinkedIn',
-            publishUrl: 'https://www.linkedin.com/post/new/',
-            sort: 1,
-            status: 'enabled',
-        }),
-        x: createPlatform('moment', 'x', {
-            name: 'X',
-            publishUrl: 'https://x.com/compose/post',
-            sort: 2,
-            status: 'enabled',
-        }),
-        facebook: createPlatform('moment', 'facebook', {
-            name: 'Facebook',
-            publishUrl: 'https://www.facebook.com/creation/tools/post',
-            sort: 3,
-            status: 'enabled',
-        }),
-        instagram: createPlatform('moment', 'instagram', {
-            name: 'Instagram',
-            publishUrl: 'https://www.instagram.com/create/post/',
-            sort: 4,
-            status: 'enabled',
-        }),
-        reddit: createPlatform('moment', 'reddit', {
-            name: 'Reddit',
-            publishUrl: 'https://www.reddit.com/submit',
-            sort: 5,
-            status: 'enabled',
-        }),
-        pinterest: createPlatform('moment', 'pinterest', {
-            name: 'Pinterest',
-            publishUrl: 'https://www.pinterest.com/pin/create/button/',
-            sort: 6,
-            status: 'enabled',
-        }),
-        tiktok: createPlatform('moment', 'tiktok', {
-            name: 'TikTok',
-            publishUrl: 'https://www.tiktok.com/upload',
-            sort: 7,
-            status: 'enabled',
-        }),
-        telegram: createPlatform('moment', 'telegram', {
-            name: 'Telegram',
-            publishUrl: 'https://web.telegram.org/',
-            sort: 8,
-            status: 'enabled',
-        }),
-        discord: createPlatform('moment', 'discord', {
-            name: 'Discord',
-            publishUrl: 'https://discord.com/app',
-            sort: 9,
-            status: 'enabled',
-        }),
-        threads: createPlatform('moment', 'threads', {
-            name: 'Threads',
-            publishUrl: 'https://www.threads.net/',
-            sort: 10,
-            status: 'enabled',
-        }),
-        bluesky: createPlatform('moment', 'bluesky', {
-            name: 'Bluesky',
-            publishUrl: 'https://bsky.app/',
-            sort: 11,
-            status: 'enabled',
-        }),
-        whatsapp: createPlatform('moment', 'whatsapp', {
-            name: 'WhatsApp',
-            publishUrl: 'https://web.whatsapp.com/',
-            sort: 12,
-            status: 'enabled',
-        }),
+        x: createPlatform('moment', 'x', { sort: 1 }),
+        facebook: createPlatform('moment', 'facebook', { sort: 2 }),
+        instagram: createPlatform('moment', 'instagram', { sort: 3 }),
+        linkedin: createPlatform('moment', 'linkedin', { sort: 4 }),
+        threads: createPlatform('moment', 'threads', { sort: 5 }),
+        bluesky: createPlatform('moment', 'bluesky', { sort: 6 }),
+        reddit: createPlatform('moment', 'reddit', { sort: 7 }),
+        tiktok: createPlatform('moment', 'tiktok', { sort: 8, status: 'disabled' }),
+        discord: createPlatform('moment', 'discord', { sort: 9, status: 'disabled' }),
+        telegram: createPlatform('moment', 'telegram', { sort: 10, status: 'disabled' }),
+        pinterest: createPlatform('moment', 'pinterest', { sort: 11, status: 'disabled' }),
+        whatsapp: createPlatform('moment', 'whatsapp', { sort: 12, status: 'disabled' }),
     },
     video: {
-        youtube: createPlatform('video', 'youtube', {
-            name: 'YouTube',
-            publishUrl: 'https://www.youtube.com/upload',
-            sort: 1,
-            status: 'enabled',
-        }),
-        tiktok: createPlatform('video', 'tiktok', {
-            name: 'TikTok',
-            publishUrl: 'https://www.tiktok.com/upload',
-            sort: 2,
-            status: 'enabled',
-        }),
-        facebook_video: createPlatform('video', 'facebook_video', {
-            name: 'Facebook Video',
-            publishUrl: 'https://www.facebook.com/creation/tools/video',
-            sort: 3,
-            status: 'enabled',
-        }),
-        instagram_reels: createPlatform('video', 'instagram_reels', {
-            name: 'Instagram Reels',
-            publishUrl: 'https://www.instagram.com/create/reel/',
-            sort: 4,
-            status: 'enabled',
-        }),
-        dailymotion: createPlatform('video', 'dailymotion', {
-            name: 'Dailymotion',
-            publishUrl: 'https://www.dailymotion.com/upload',
-            sort: 5,
-            status: 'enabled',
-        }),
-        twitch: createPlatform('video', 'twitch', {
-            name: 'Twitch',
-            publishUrl: 'https://www.twitch.tv/dashboard/upload',
-            sort: 6,
-            status: 'enabled',
-        }),
-        vimeo: createPlatform('video', 'vimeo', {
-            name: 'Vimeo',
-            publishUrl: 'https://vimeo.com/upload',
-            sort: 7,
-            status: 'enabled',
-        }),
+        youtube: createPlatform('video', 'youtube', { sort: 1, status: 'disabled' }),
+        tiktok: createPlatform('video', 'tiktok', { sort: 2, status: 'disabled' }),
+        facebook_video: createPlatform('video', 'facebook_video', { sort: 3, status: 'disabled' }),
+        instagram_reels: createPlatform('video', 'instagram_reels', { sort: 4, status: 'disabled' }),
+        dailymotion: createPlatform('video', 'dailymotion', { sort: 5, status: 'disabled' }),
+        twitch: createPlatform('video', 'twitch', { sort: 6, status: 'disabled' }),
+        vimeo: createPlatform('video', 'vimeo', { sort: 7, status: 'disabled' }),
     },
     audio: {
-        spotify: createPlatform('audio', 'spotify', {
-            name: 'Spotify',
-            publishUrl: 'https://artists.spotify.com/c/artist/overview',
-            sort: 1,
-            status: 'enabled',
-        }),
-        apple_music: createPlatform('audio', 'apple_music', {
-            name: 'Apple Music',
-            publishUrl: 'https://artists.apple.com/',
-            sort: 2,
-            status: 'enabled',
-        }),
-        google_podcasts: createPlatform('audio', 'google_podcasts', {
-            name: 'Google Podcasts',
-            publishUrl: 'https://podcasts.google.com/publish',
-            sort: 3,
-            status: 'enabled',
-        }),
-        soundcloud: createPlatform('audio', 'soundcloud', {
-            name: 'SoundCloud',
-            publishUrl: 'https://soundcloud.com/upload',
-            sort: 4,
-            status: 'enabled',
-        }),
-        audiomack: createPlatform('audio', 'audiomack', {
-            name: 'Audiomack',
-            publishUrl: 'https://www.audiomack.com/upload',
-            sort: 5,
-            status: 'enabled',
-        }),
-        deezer: createPlatform('audio', 'deezer', {
-            name: 'Deezer',
-            publishUrl: 'https://www.deezer.com/',
-            sort: 6,
-            status: 'enabled',
-        }),
-        tidal: createPlatform('audio', 'tidal', {
-            name: 'Tidal',
-            publishUrl: 'https://tidal.com/',
-            sort: 7,
-            status: 'enabled',
-        }),
+        spotify: createPlatform('audio', 'spotify', { sort: 1, status: 'disabled' }),
+        apple_music: createPlatform('audio', 'apple_music', { sort: 2, status: 'disabled' }),
+        soundcloud: createPlatform('audio', 'soundcloud', { sort: 3, status: 'disabled' }),
+        audiomack: createPlatform('audio', 'audiomack', { sort: 4, status: 'disabled' }),
+        deezer: createPlatform('audio', 'deezer', { sort: 5, status: 'disabled' }),
+        tidal: createPlatform('audio', 'tidal', { sort: 6, status: 'disabled' }),
     },
 });
 
@@ -264,6 +94,30 @@ const sortPlatforms = (obj: any): any => {
     return sorted;
 };
 
+const filterDisabledPlatforms = (obj: any): any => {
+    if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) return obj;
+    const isPlatformObj = Object.values(obj).some(
+        (v) => typeof v === 'object' && v !== null && 'sort' in v
+    );
+    if (!isPlatformObj) {
+        let result: any = {};
+        for (const key in obj) {
+            const filtered = filterDisabledPlatforms(obj[key]);
+            if (filtered && typeof filtered === 'object' && !Array.isArray(filtered) && Object.keys(filtered).length === 0) {
+                continue;
+            }
+            result[key] = filtered;
+        }
+        return result;
+    }
+    const filtered: any = {};
+    for (const [k, v] of Object.entries(obj)) {
+        if ((v as any)?.status === 'disabled') continue;
+        filtered[k] = filterDisabledPlatforms(v);
+    }
+    return filtered;
+};
+
 export const getPlatforms = () => {
-    return sortPlatforms(platforms);
+    return sortPlatforms(filterDisabledPlatforms(platforms));
 };

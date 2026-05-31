@@ -8,17 +8,19 @@ export default defineConfig({
   autoIcons: {
     developmentIndicator: false
   },
+  runner: {
+    disabled: true
+  },
   build: {
     outDir: '.output',
     rollupOptions: {
       external: ['wxt/browser'],
     }
   },
-  vite: (config) => {
+  vite: (env) => {
+    const isDev = env.command === 'serve';
     return {
-      ...config,
       build: {
-        ...config.build,
         modulePreload: {
           polyfill: false,
         },
@@ -27,9 +29,8 @@ export default defineConfig({
         exclude: []
       },
       resolve: {
-        ...config.resolve,
+        conditions: isDev ? ['development'] : [],
         alias: {
-          ...config.resolve?.alias,
           '~': resolve(__dirname, 'src'),
           'wxt/browser': resolve(__dirname, 'node_modules/wxt/dist/browser.mjs')
         }
@@ -57,6 +58,7 @@ export default defineConfig({
       'storage',
       'activeTab',
       'tabs',
+      'tabGroups',
       'scripting',
       'sidePanel',
       'contextMenus',

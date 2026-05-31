@@ -31,6 +31,16 @@ const backgroundMain = () => {
     chrome.tabs.create({ url: `${getPostarBaseUrl()}${getPublishPath()}` });
   });
 
+  chrome.runtime.onInstalled.addListener(() => {
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        if (tab.id && tab.url && !tab.url.startsWith('chrome://')) {
+          chrome.tabs.sendMessage(tab.id, { type: 'POSTAR_RELOAD' }).catch(() => {});
+        }
+      });
+    });
+  });
+
   createBackgroundListener(handleMessage);
 };
 

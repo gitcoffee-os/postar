@@ -8,22 +8,30 @@ export const executeScriptsToTabs = (tabs: any, data: any) => {
         if (!tab?.id) {
             return;
         }
-        chrome.tabs.onUpdated.addListener(function listener(tabId: number, info: any) {
-            if (tabId === tab.id && info.status === 'complete') {
+        let executed = false;
+        const listener = (tabId: number, info: any) => {
+            if (tabId === tab.id && info.status === 'complete' && !executed) {
+                executed = true;
                 chrome.tabs.onUpdated.removeListener(listener);
                 if (platform) {
-                    platform['executeScript'] = publisher[platform.type]?.[platform.code] || publisher['article']?.[platform.code];
+                    const publisherObj = publisher[platform.type]?.[platform.code] || publisher['moment']?.[platform.code] || publisher['article']?.[platform.code];
                     const publisherData = {
                         data: data?.data,
                         platform: platform,
                     };
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id },
-                        func: platform.executeScript,
-                        args: [publisherData]
-                    });
+                    const publishFunc = typeof publisherObj === 'function' ? publisherObj : publisherObj?.publish;
+                    if (publishFunc && typeof publishFunc === 'function') {
+                        chrome.scripting.executeScript({
+                            target: { tabId: tab.id },
+                            func: publishFunc,
+                            args: [publisherData]
+                        });
+                    } else {
+                        console.warn(`No publish function found for platform: ${platform.type}/${platform.code}`);
+                    }
                 }
             }
-        });
+        };
+        chrome.tabs.onUpdated.addListener(listener);
     });
 }

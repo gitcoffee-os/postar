@@ -31,7 +31,9 @@ const pluginBaseEn: PluginBase = {
 };
 
 const pluginConfigEn: PublisherConfig = {
-  types: ['article', 'moment', 'video', 'podcast'],
+  types: ['article'
+    // , 'moment', 'video', 'podcast'
+  ],
 };
 
 const pluginImplementationEn: PluginImplementation = {

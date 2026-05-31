@@ -25,6 +25,106 @@ import { startMediaSyncMessageListener, stopMediaSyncMessageListener } from '~/u
 import antDesignCss from 'ant-design-vue/dist/reset.css?inline';
 import globalCss from '~/styles/global.css?inline';
 
+const isContextValid = () => {
+  try {
+    return !!chrome.runtime?.id;
+  } catch {
+    return false;
+  }
+};
+
+const safeSendMessage = (message: any): void => {
+  if (!isContextValid()) return;
+  try {
+    chrome.runtime.sendMessage(message);
+  } catch {
+  }
+};
+
+let updateBannerShown = false;
+
+const showUpdateBanner = (shadowRoot: ShadowRoot) => {
+  if (updateBannerShown) return;
+  updateBannerShown = true;
+
+  const bannerStyle = document.createElement('style');
+  bannerStyle.textContent = `
+    .postar-update-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2147483647;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #bd34fe 100%);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      animation: postar-banner-slide 0.3s ease-out;
+    }
+    .postar-update-banner span {
+      line-height: 1.5;
+    }
+    .postar-update-reload-btn {
+      padding: 4px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .postar-update-reload-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+    .postar-update-close-btn {
+      padding: 2px 8px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .postar-update-close-btn:hover {
+      color: #fff;
+    }
+    @keyframes postar-banner-slide {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  `;
+  shadowRoot.appendChild(bannerStyle);
+
+  const banner = document.createElement('div');
+  banner.className = 'postar-update-banner';
+  banner.innerHTML = `
+    <span>Postar has been updated, please refresh the page to continue using it.</span>
+    <button class="postar-update-reload-btn">Refresh</button>
+    <button class="postar-update-close-btn">&times;</button>
+  `;
+
+  const reloadBtn = banner.querySelector('.postar-update-reload-btn');
+  const closeBtn = banner.querySelector('.postar-update-close-btn');
+
+  reloadBtn?.addEventListener('click', () => {
+    window.location.reload();
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    banner.remove();
+  });
+
+  shadowRoot.appendChild(banner);
+};
+
 export default {
   matches: ['<all_urls>'],
   main() {
@@ -56,22 +156,32 @@ export default {
 
     app.mount(container);
 
+    const contextCheckInterval = setInterval(() => {
+      if (!isContextValid()) {
+        clearInterval(contextCheckInterval);
+        stopMediaSyncMessageListener();
+        showUpdateBanner(shadowRoot);
+      }
+    }, 3000);
+
     window.addEventListener('load', () => {
       const data = getReaderData();
       const { content, contentImages } = data;
 
-      chrome.runtime.sendMessage({
+      safeSendMessage({
         type: 'IMAGE_DETECTED',
         contentImages: Array.from(contentImages).map((img: any) => ({ src: img.src })),
       });
 
-      chrome.runtime.sendMessage({
+      safeSendMessage({
         type: 'CONTENT_DETECTED',
         content: content,
       });
     });
 
     const handleSelectionChange = debounceUtils.debounce(() => {
+      if (!isContextValid()) return;
+
       const selection = window.getSelection();
 
       const hasSelection = selection && selection.rangeCount > 0 && selection.toString().trim().length > 0;
@@ -103,15 +213,13 @@ export default {
         }
       }
 
-      if (chrome && chrome.runtime && chrome.runtime.sendMessage) {
-        chrome.runtime.sendMessage({
-          type: 'SELECTION_DATA',
-          ...selectionData,
-          url: window.location.href,
-          timestamp: new Date().toISOString(),
-          hasSelection: hasSelection,
-        });
-      }
+      safeSendMessage({
+        type: 'SELECTION_DATA',
+        ...selectionData,
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+        hasSelection: hasSelection,
+      });
     }, 300);
 
     document.addEventListener('selectionchange', () => {
@@ -119,11 +227,19 @@ export default {
     });
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (!isContextValid()) return false;
+      if (request?.type === 'POSTAR_RELOAD') {
+        clearInterval(contextCheckInterval);
+        stopMediaSyncMessageListener();
+        showUpdateBanner(shadowRoot);
+        return true;
+      }
       handleMessage(request, sender, sendResponse);
       return true;
     });
 
     window.addEventListener('unload', () => {
+      clearInterval(contextCheckInterval);
       stopMediaSyncMessageListener();
     });
   }
