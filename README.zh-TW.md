@@ -114,3 +114,15 @@ Postar 內容同步助手微信群：
 ## 🌍 開源生態
 
 [開源生態](https://postar.exmay.com/docs/zh-TW/opensource)
+
+---
+
+<div align="center">
+
+**⚡ Postar 內容同步助手** - 一款開源的國際多平臺內容同步分發生產力工具。
+
+支援將文章、筆記、動態、圖片、視頻、音頻等內容，一鍵同步發布至主流媒體平臺。 🚀
+
+[🏠 官網](https://postar.exmay.com) | [📖 文件](https://postar.exmay.com/docs/zh-TW) | [✨ Postar 內容同步助手 雲端體驗](https://postar.exmay.com/exmay/postar/center/home) | [💬 社群](https://postar.exmay.com/docs/zh-TW/usergroup) | [🐛 回饋](https://github.com/gitcoffee-os/postar/issues) | [🌐 中文版 PostBot](https://github.com/gitcoffee-os/postbot)
+
+</div>

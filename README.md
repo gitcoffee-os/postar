@@ -118,3 +118,15 @@ Postar Content Sync Assistant WeChat Group:
 <!-- ## 🌟 Star History
 
 [![Star History Chart](https://api.star-history.com/image?repos=gitcoffee-os/postar&type=date&legend=top-left)](https://github.com/gitcoffee-os/postar) -->
+
+---
+
+<div align="center">
+
+**⚡ Postar Content Sync Assistant** - An open-source multi-platform content sync and distribution productivity tool for international platforms.
+
+Sync and publish articles, notes, moments, images, videos, audio and more to mainstream media platforms with one click. 🚀
+
+[🏠 Homepage](https://postar.exmay.com) | [📖 Docs](https://postar.exmay.com/docs) | [✨ Postar Content Sync Assistant Cloud Experience](https://postar.exmay.com/exmay/postar/center/home) | [💬 Community](https://postar.exmay.com/docs/usergroup) | [🐛 Issues](https://github.com/gitcoffee-os/postar/issues) | [🌐 Chinese Edition PostBot](https://github.com/gitcoffee-os/postbot)
+
+</div>

@@ -118,3 +118,15 @@ Postar 内容同步助手微信群：
 ## 🌟 Star 历史
 
 [![Star History Chart](https://api.star-history.com/image?repos=gitcoffee-os/postar&type=date&legend=top-left)](https://github.com/gitcoffee-os/postar) -->
+
+---
+
+<div align="center">
+
+**⚡ Postar 内容同步助手** - 一款开源的国际多平台内容同步分发生产力工具。
+
+支持将文章、笔记、动态、图片、视频、音频等内容，一键同步发布至主流媒体平台。 🚀
+
+[🏠 官网](https://postar.exmay.com) | [📖 文档](https://postar.exmay.com/docs/zh) | [✨ Postar 内容同步助手 云端体验](https://postar.exmay.com/exmay/postar/center/home) | [💬 社区](https://postar.exmay.com/docs/zh/usergroup) | [🐛 反馈](https://github.com/gitcoffee-os/postar/issues) | [🌐 中文版 PostBot](https://github.com/gitcoffee-os/postbot)
+
+</div>
