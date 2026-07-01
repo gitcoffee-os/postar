@@ -23,6 +23,15 @@
 	持续迭代中...
 </p>
 
+<p align="center">
+	<strong>🌐 语言:</strong>
+	<a href="README.md" style="margin: 0 5px;">English</a>
+	<span style="margin: 0 5px;">|</span>
+	<a href="README.zh.md" style="margin: 0 5px;">简体中文</a>
+	<span style="margin: 0 5px;">|</span>
+	<a href="README.zh-TW.md" style="margin: 0 5px;">繁體中文</a>
+</p>
+
 ## Postar 内容同步助手简介
 ![postar-homepage](https://postar.exmay.com/docs/images/postar_homepage.png)
 <br />

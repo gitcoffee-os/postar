@@ -23,6 +23,15 @@
 	Continuously iterating...
 </p>
 
+<p align="center">
+	<strong>🌐 Language:</strong>
+	<a href="README.md" style="margin: 0 5px;">English</a>
+	<span style="margin: 0 5px;">|</span>
+	<a href="README.zh.md" style="margin: 0 5px;">简体中文</a>
+	<span style="margin: 0 5px;">|</span>
+	<a href="README.zh-TW.md" style="margin: 0 5px;">繁體中文</a>
+</p>
+
 ## Introduction to Postar Content Sync Assistant
 ![postar-homepage](https://postar.exmay.com/docs/images/postar_homepage.png)
 <br />
