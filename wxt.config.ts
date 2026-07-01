@@ -2,6 +2,8 @@ import { defineConfig } from 'wxt';
 import { resolve } from 'path';
 import fs from 'fs';
 
+const pkg = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf8'));
+
 export default defineConfig({
   modules: ['@wxt-dev/module-vue', '@wxt-dev/auto-icons'],
   srcDir: 'src',
@@ -32,7 +34,8 @@ export default defineConfig({
         conditions: isDev ? ['development'] : [],
         alias: {
           '~': resolve(__dirname, 'src'),
-          'wxt/browser': resolve(__dirname, 'node_modules/wxt/dist/browser.mjs')
+          'wxt/browser': resolve(__dirname, 'node_modules/wxt/dist/browser.mjs'),
+          '@gitcoffee/postbot-publisher-debug': resolve(__dirname, 'src/stubs/publisher-debug.ts')
         }
       }
     };
@@ -51,7 +54,7 @@ export default defineConfig({
   },
   manifest: {
     name: 'Postar',
-    version: '1.0.0',
+    version: pkg.version,
     description: 'Postar - International Content Sync Assistant',
     action: {},
     permissions: [

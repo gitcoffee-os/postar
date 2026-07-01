@@ -22,6 +22,7 @@ import { handleMessage } from '~/content/services/message.services';
 import { setupI18n } from '~/locales';
 import { processContent } from '@gitcoffee/postbot-content-adapter';
 import { startMediaSyncMessageListener, stopMediaSyncMessageListener } from '~/utils/media';
+import { setupDebugger } from '~/content/debugger';
 import antDesignCss from 'ant-design-vue/dist/reset.css?inline';
 import globalCss from '~/styles/global.css?inline';
 
@@ -130,6 +131,7 @@ export default {
   main() {
     initMessageEventListener();
     startMediaSyncMessageListener();
+    setupDebugger();
 
     const host = document.createElement('div');
     host.id = 'postar-host';
@@ -145,16 +147,26 @@ export default {
     container.id = 'postar-container';
     shadowRoot.appendChild(container);
 
-    document.body.appendChild(host);
+    const initApp = () => {
+      if (!document.body.contains(host)) {
+        document.body.appendChild(host);
+      }
 
-    const app = createApp(PostarModal);
+      const app = createApp(PostarModal);
 
-    app.provide('postar-shadow-root', shadowRoot);
-    app.provide('postar-shadow-container', container);
+      app.provide('postar-shadow-root', shadowRoot);
+      app.provide('postar-shadow-container', container);
 
-    setupI18n(app, 'en');
+      setupI18n(app, 'en');
 
-    app.mount(container);
+      app.mount(container);
+    };
+
+    if (document.readyState === 'complete') {
+      initApp();
+    } else {
+      window.addEventListener('load', initApp, { once: true });
+    }
 
     const contextCheckInterval = setInterval(() => {
       if (!isContextValid()) {
@@ -238,7 +250,7 @@ export default {
       return true;
     });
 
-    window.addEventListener('unload', () => {
+    window.addEventListener('beforeunload', () => {
       clearInterval(contextCheckInterval);
       stopMediaSyncMessageListener();
     });

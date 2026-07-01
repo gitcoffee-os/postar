@@ -1,7 +1,7 @@
 <p align="center">
 	<img alt="logo" src="https://postar.exmay.com/docs/images/postar_logo.svg" width="150" height="150">
 </p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar Content Sync Assistant v1.0.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar Content Sync Assistant v1.1.0</h1>
 <h4 align="center">
 	An open-source multi-platform content sync and distribution productivity tool for international platforms.
 	<br />
@@ -36,9 +36,13 @@
 <br />
 ![postar-modal](https://postar.exmay.com/docs/images/postar_modal_dark.png)
 <br />
-![postar-publisher](https://postar.exmay.com/docs/images/postar_publisher.png?v=1.0.0)
+![postar-publisher](https://postar.exmay.com/docs/images/postar_publisher.png?v=1.1.0)
 <br />
-![postar-editor](https://postar.exmay.com/docs/images/postar_editor.png?v=1.0.0)
+![postar-editor](https://postar.exmay.com/docs/images/postar_editor.png?v=1.1.0)
+<br />
+![postar-moment](https://postar.exmay.com/docs/images/postar_moment.png?v=1.1.0)
+<br />
+![postar-video](https://postar.exmay.com/docs/images/postar_video.png?v=1.1.0)
 <br />
 ![postar-sidebar](https://postar.exmay.com/docs/images/postar_sidebar.png)
 
