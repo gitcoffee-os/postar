@@ -35,7 +35,6 @@ export default defineConfig({
         alias: {
           '~': resolve(__dirname, 'src'),
           'wxt/browser': resolve(__dirname, 'node_modules/wxt/dist/browser.mjs'),
-          '@gitcoffee/postbot-publisher-debug': resolve(__dirname, 'src/stubs/publisher-debug.ts')
         }
       }
     };

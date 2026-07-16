@@ -1,255 +1,29 @@
-import { createDebugger, instagramDebugConfig, facebookReelsDebugConfig, pinterestVideoDebugConfig } from '@gitcoffee/postbot-publisher-debug'
+import { createDebugger } from '@gitcoffee/postbot-publisher-debug'
+import { publisherDebugConfigs } from '@gitcoffee/postbot-publisher-en'
 import type { DebugConfig, DebuggerInstance } from '@gitcoffee/postbot-publisher-debug'
 
-const PLATFORM_PATTERNS: { match: (url: string) => boolean; config: DebugConfig }[] = [
-  {
-    match: (url) => /tiktok\.com/.test(url),
-    config: {
-      platform: 'TikTok Video',
-      shortcutKey: 'Ctrl+Shift+D',
-      autoRefresh: 2000,
-      groups: [
-        {
-          name: 'Step 1 — Upload',
-          selectors: [
-            { name: 'Upload Container', selector: '[data-e2e="select_video_container"]' },
-            { name: 'Upload Button', selector: '[data-e2e="select_video_button"]' },
-            { name: 'File Input', selector: 'input[type="file"]' },
-          ],
-        },
-        {
-          name: 'Step 2 — Edit Page',
-          selectors: [
-            { name: 'Upload Success', selector: '[data-e2e="upload_status_container"] .info-status.success' },
-            { name: 'Caption Container', selector: '[data-e2e="caption_container"]' },
-            { name: 'Draft Editor', selector: '[data-e2e="caption_container"] div[contenteditable="true"]' },
-          ],
-        },
-        {
-          name: 'Cover Dialog',
-          selectors: [
-            { name: 'Cover Container', selector: '[data-e2e="cover_container"]' },
-            { name: 'Cover Container Inner', selector: 'div.cover-container' },
-            { name: 'Edit Button', selector: 'div.edit-container' },
-            { name: 'Cover Dialog', selector: 'div.Dialog__content[data-dialog-content="true"]' },
-            { name: 'Upload Area', selector: 'label.ImageUpload__uploadArea' },
-            { name: 'File Input', selector: 'div.Dialog__content input[type="file"]' },
-            { name: 'Save Button', selector: 'button.header-button' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Publish Button (e2e)', selector: '[data-e2e="post_video_button"]' },
-            { name: 'All Buttons', selector: 'button' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /youtube\.com/.test(url),
-    config: {
-      platform: 'YouTube',
-      shortcutKey: 'Ctrl+Shift+D',
-      autoRefresh: 2000,
-      groups: [
-        {
-          name: 'Step 1 — Upload Dialog',
-          selectors: [
-            { name: 'Upload Dialog', selector: 'ytcp-uploads-dialog' },
-            { name: 'Video File Input', selector: 'ytcp-uploads-dialog input[type="file"]' },
-            { name: 'Global File Input', selector: 'input[type="file"]' },
-          ],
-        },
-        {
-          name: 'Step 2 — Details Editor',
-          selectors: [
-            { name: 'Details Form', selector: 'ytcp-video-metadata-editor#details' },
-            { name: 'Title Editor', selector: '#title-textarea #textbox' },
-            { name: 'Description Editor', selector: '#description-textarea #textbox' },
-            { name: 'Title Textarea Container', selector: '#title-textarea' },
-            { name: 'Description Textarea Container', selector: '#description-textarea' },
-          ],
-        },
-        {
-          name: 'Step 2b — Thumbnail',
-          selectors: [
-            { name: 'Thumbnail Container', selector: 'ytcp-video-thumbnail-editor' },
-            { name: 'Thumbnail Uploader', selector: 'ytcp-thumbnail-uploader' },
-            { name: 'Select Button (Upload File)', selector: 'ytcp-video-thumbnail-editor button#select-button' },
-            { name: 'Thumbnail File Input', selector: 'ytcp-video-thumbnail-editor input[type="file"]' },
-          ],
-        },
-        {
-          name: 'Step 2c — Audience',
-          selectors: [
-            { name: 'Kids Not MFK', selector: 'tp-yt-paper-radio-button[name="VIDEO_MADE_FOR_KIDS_NOT_MFK"]' },
-            { name: 'Kids MFK', selector: 'tp-yt-paper-radio-button[name="VIDEO_MADE_FOR_KIDS_MFK"]' },
-          ],
-        },
-        {
-          name: 'Step 3 — Navigation & Visibility',
-          selectors: [
-            { name: 'Next Button', selector: '#next-button' },
-            { name: 'Back Button', selector: '#back-button' },
-            { name: 'Done Button', selector: '#done-button' },
-            { name: 'Visibility Public', selector: 'paper-radio-button[name="PUBLIC"]' },
-            { name: 'Visibility Unlisted', selector: 'paper-radio-button[name="UNLISTED"]' },
-            { name: 'Visibility Private', selector: 'paper-radio-button[name="PRIVATE"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /medium\.com/.test(url) || /medium\.com\/new-story/.test(url),
-    config: {
-      platform: 'Medium',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Editor',
-          selectors: [
-            { name: 'Title', selector: 'h1[data-testid="storyTitle"]' },
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Publish Button', selector: 'button[data-testid="headerPublishButton"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /linkedin\.com/.test(url),
-    config: {
-      platform: 'LinkedIn',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Editor',
-          selectors: [
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-            { name: 'Article Title', selector: 'input[aria-label*="Title"]' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Publish Button', selector: 'button[aria-label*="Publish"]' },
-            { name: 'Post Button', selector: 'button[data-control-name="post"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /x\.com/.test(url) || /twitter\.com/.test(url),
-    config: {
-      platform: 'X / Twitter',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Post',
-          selectors: [
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-            { name: 'File Input', selector: 'input[type="file"]' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Post Button', selector: 'button[data-testid="tweetButtonInline"]' },
-            { name: 'Reply Button', selector: 'button[data-testid="tweetButton"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /facebook\.com/.test(url),
-    config: facebookReelsDebugConfig,
-  },
-  {
-    match: (url) => /pinterest\.com/.test(url) && !/\/pin\/create\/button/.test(url),
-    config: pinterestVideoDebugConfig,
-  },
-  {
-    match: (url) => /instagram\.com/.test(url),
-    config: instagramDebugConfig,
-  },
-  {
-    match: (url) => /reddit\.com/.test(url),
-    config: {
-      platform: 'Reddit',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Post',
-          selectors: [
-            { name: 'Title', selector: 'textarea[name="title"]' },
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-            { name: 'File Input', selector: 'input[type="file"]' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Post Button', selector: 'button[data-click-id="text"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /dev\.to/.test(url),
-    config: {
-      platform: 'Dev.to',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Editor',
-          selectors: [
-            { name: 'Title', selector: 'textarea[aria-label*="title"]' },
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Publish Button', selector: 'button[data-testid="submit-btn"]' },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    match: (url) => /github\.com/.test(url) && /\/new\//.test(url),
-    config: {
-      platform: 'GitHub',
-      shortcutKey: 'Ctrl+Shift+D',
-      groups: [
-        {
-          name: 'Editor',
-          selectors: [
-            { name: 'File Name', selector: 'input[aria-label*="name"]' },
-            { name: 'Contenteditable', selector: 'div[contenteditable="true"]' },
-            { name: 'Code Editor', selector: '.CodeMirror' },
-          ],
-        },
-        {
-          name: 'Publish',
-          selectors: [
-            { name: 'Commit Button', selector: 'button[type="submit"]' },
-          ],
-        },
-      ],
-    },
-  },
+interface PlatformPattern {
+  match: (url: string) => boolean
+  key: string
+}
+
+/**
+ * URL -> publisherDebugConfigs 索引映射。
+ * 这里只列出常用平台的主形态；同一域名存在多种形态时（如 X 的 moment/video），
+ * 优先取最常用的一种。其余形态可在运行时由发布器自身注册到主世界注册表后被拉取。
+ */
+const PLATFORM_URL_PATTERNS: PlatformPattern[] = [
+  { match: (url) => /tiktok\.com/.test(url), key: 'video_tiktok_video' },
+  { match: (url) => /youtube\.com/.test(url), key: 'video_youtube' },
+  { match: (url) => /medium\.com/.test(url) || /medium\.com\/new-story/.test(url), key: 'article_medium' },
+  { match: (url) => /linkedin\.com/.test(url), key: 'moment_linkedin' },
+  { match: (url) => /x\.com/.test(url) || /twitter\.com/.test(url), key: 'moment_x' },
+  { match: (url) => /facebook\.com/.test(url), key: 'video_facebook_reels' },
+  { match: (url) => /pinterest\.com/.test(url) && !/\/pin\/create\/button/.test(url), key: 'video_pinterest_video' },
+  { match: (url) => /instagram\.com/.test(url), key: 'video_instagram_reels' },
+  { match: (url) => /reddit\.com/.test(url), key: 'moment_reddit' },
+  { match: (url) => /dev\.to/.test(url), key: 'article_devto' },
+  { match: (url) => /github\.com/.test(url) && /\/new\//.test(url), key: 'article_github' },
 ]
 
 let debugInstance: DebuggerInstance | null = null
@@ -264,29 +38,26 @@ export function setupDebugger(): void {
   })
 
   if (import.meta.env.DEV) {
-    const config = detectPlatform(window.location.href)
-    if (config) {
-      setTimeout(() => {
-        debugInstance = createDebugger({ ...config, autoShow: true })
-      }, 1000)
-    }
+    detectAndInitDebugger()
   }
 }
 
-function detectPlatform(url: string): DebugConfig | null {
-  for (const p of PLATFORM_PATTERNS) {
-    if (p.match(url)) return p.config
+async function detectAndInitDebugger(): Promise<void> {
+  const config = await resolveConfig(window.location.href)
+  if (config) {
+    setTimeout(() => {
+      debugInstance = createDebugger({ ...config, autoShow: true })
+    }, 1000)
   }
-  return null
 }
 
-function toggleDebugPanel(): void {
+async function toggleDebugPanel(): Promise<void> {
   if (debugInstance) {
     debugInstance.toggle()
     return
   }
 
-  const config = detectPlatform(window.location.href)
+  const config = await resolveConfig(window.location.href)
   const groups = config?.groups || [
     {
       name: '通用选择器',
@@ -306,4 +77,78 @@ function toggleDebugPanel(): void {
     autoShow: true,
     shortcutKey: 'Ctrl+Shift+D',
   })
+}
+
+/**
+ * 解析当前页面应使用的调试配置：
+ * 1. 根据 URL 从 publisherEntries 取静态配置（发布器源码中的选择器）。
+ * 2. 通过 chrome.scripting.executeScript 从页面主世界拉取运行时注册表，
+ *    合并由 executeScriptsToTabs 在发布前注入的更精确/更多形态的配置。
+ */
+async function resolveConfig(url: string): Promise<DebugConfig | null> {
+  const staticConfig = getStaticConfig(url)
+  const runtimeConfigs = await fetchRuntimeConfigs()
+
+  const matchedRuntime = Object.values(runtimeConfigs).find((cfg) =>
+    staticConfig ? cfg.platform === staticConfig.platform : false
+  )
+
+  // 如果有运行时配置，优先用它；否则回退到静态配置
+  if (matchedRuntime) {
+    return mergeConfigs(staticConfig, matchedRuntime)
+  }
+
+  return staticConfig
+}
+
+function getStaticConfig(url: string): DebugConfig | null {
+  for (const p of PLATFORM_URL_PATTERNS) {
+    if (p.match(url)) {
+      const config = publisherDebugConfigs[p.key]
+      if (config) {
+        return config
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * 从 Background 读取当前页面主世界的运行时注册表。
+ * 发布器被注入前会通过 registerPublisherConfigOnPage 写入该表。
+ * 内容脚本无法直接访问主世界 window，因此通过 background 中转 chrome.scripting.executeScript。
+ */
+async function fetchRuntimeConfigs(): Promise<Record<string, DebugConfig>> {
+  return new Promise((resolve) => {
+    if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) {
+      resolve({})
+      return
+    }
+
+    chrome.runtime.sendMessage({ type: 'GET_RUNTIME_DEBUG_CONFIGS' }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.warn('[Postar Debugger] fetch runtime configs failed:', chrome.runtime.lastError.message)
+        resolve({})
+        return
+      }
+      resolve((response as Record<string, DebugConfig>) || {})
+    })
+  })
+}
+
+/**
+ * 合并静态与运行时配置：保留静态配置的元信息，把运行时 groups 追加到末尾。
+ * 如果平台名一致则直接覆盖 groups，避免重复。
+ */
+function mergeConfigs(staticCfg: DebugConfig | null, runtimeCfg: DebugConfig): DebugConfig {
+  if (!staticCfg) return runtimeCfg
+
+  const staticGroupNames = new Set(staticCfg.groups.map((g) => g.name))
+  const extraGroups = runtimeCfg.groups.filter((g) => !staticGroupNames.has(g.name))
+
+  return {
+    ...staticCfg,
+    platform: runtimeCfg.platform || staticCfg.platform,
+    groups: [...staticCfg.groups, ...extraGroups],
+  }
 }

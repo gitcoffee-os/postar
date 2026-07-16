@@ -31,6 +31,41 @@ const backgroundMain = () => {
     chrome.tabs.create({ url: `${getPostarBaseUrl()}${getPublishPath()}` });
   });
 
+  // 供内容脚本读取页面主世界的发布器调试配置注册表
+  chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.type !== 'GET_RUNTIME_DEBUG_CONFIGS') {
+      return;
+    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0]?.id;
+      if (!tabId) {
+        sendResponse({});
+        return;
+      }
+      chrome.scripting.executeScript(
+        {
+          target: { tabId },
+          func: () => {
+            const key = '__postbotPublisherDebugRegistry__';
+            const w = window as unknown as Record<string, any>;
+            const registry = w[key];
+            return registry ? JSON.parse(JSON.stringify(registry)) : {};
+          },
+          world: 'MAIN',
+        },
+        (results) => {
+          if (chrome.runtime.lastError) {
+            console.warn('[Postar Background] fetch runtime debug configs failed:', chrome.runtime.lastError.message);
+            sendResponse({});
+            return;
+          }
+          sendResponse((results?.[0]?.result as Record<string, any>) || {});
+        }
+      );
+    });
+    return true;
+  });
+
   chrome.runtime.onInstalled.addListener(() => {
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {

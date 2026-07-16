@@ -1,7 +1,7 @@
 {
   "displayName": "Postar - Content Sync Assistant",
   "name": "postar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Postar - International Content Sync Assistant",
   "author": "GitCoffee Team @GitCoffee",
   "scripts": {
