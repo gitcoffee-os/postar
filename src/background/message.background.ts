@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createMessageHandler } from '@gitcoffee/postbot-background';
+import { createMessageHandler } from '@gitcoffee-os/postbot-background';
 import { state } from '~/content/components/postar.data';
 import { windowPublish } from '~/media/publisher';
 import { getPlatforms } from '~/media/platform';
 import { getMetaInfoList } from '~/media/meta';
-import { user } from '@gitcoffee/postbot-api';
+import { user } from '@gitcoffee-os/postbot-api';
 
 export const handleMessage = createMessageHandler({
   getPlatforms: (type?: string) => getPlatforms()[type || 'article'],

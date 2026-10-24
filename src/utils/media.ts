@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { getPostarBaseUrl } from '~/config/config';
-import { image, media } from '@gitcoffee/postbot-utils';
-import type { ImageData, ProcessedImage } from '@gitcoffee/postbot-utils';
+import { image, media } from '@gitcoffee-os/postbot-utils';
+import type { ImageData, ProcessedImage } from '@gitcoffee-os/postbot-utils';
 
 export type { ImageData, ProcessedImage };
 export const { isValidOrigin, extractFilenameFromUrl, getImageType, fetchImageAsBlob, processImages, uploadQueueManager, getUploadQueueImages, markUploadComplete, MEDIA_SYNC_ACTION } = { ...image, ...media };

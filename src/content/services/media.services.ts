@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { handleMediaMessage, handleMediaSyncMessage, handleGetSyncImages, handleUploadComplete, getMediaSyncAction } from '@gitcoffee/postbot-content-services';
+import { handleMediaMessage, handleMediaSyncMessage, handleGetSyncImages, handleUploadComplete, getMediaSyncAction } from '@gitcoffee-os/postbot-content-services';
 import { getReaderData } from '~/media/parser';
 
 export {

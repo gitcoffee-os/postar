@@ -1,7 +1,7 @@
 <p align="center">
 	<img alt="logo" src="https://postar.exmay.com/docs/images/postar_logo.svg" width="150" height="150">
 </p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar Content Sync Assistant v1.1.1</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar Content Sync Assistant v1.2.0</h1>
 <h4 align="center">
 	An open-source multi-platform content sync and distribution productivity tool for international platforms.
 	<br />

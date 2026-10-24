@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { initEvents } from '@gitcoffee/postbot-events';
-import { CONTEXT_MENU_ACTION } from '@gitcoffee/postbot-actions';
-import { user } from '@gitcoffee/postbot-api';
+import { initEvents } from '@gitcoffee-os/postbot-events';
+import { CONTEXT_MENU_ACTION } from '@gitcoffee-os/postbot-actions';
+import { user } from '@gitcoffee-os/postbot-api';
 
 const checkLoginAndSend = async (tab: chrome.tabs.Tab | undefined, action: string, extra?: { srcUrl?: string }) => {
   if (!tab?.id) return;

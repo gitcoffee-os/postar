@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createParser } from '@gitcoffee/postbot-media';
+import { createParser } from '@gitcoffee-os/postbot-media';
 import { state } from '~/content/components/postar.data';
 import { defaultReader } from '~/media/adapter';
 

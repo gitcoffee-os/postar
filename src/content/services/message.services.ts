@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createMessageHandler } from '@gitcoffee/postbot-content-services';
+import { createMessageHandler } from '@gitcoffee-os/postbot-content-services';
 import { getReaderData } from '~/media/parser';
 import { state } from '../components/postar.data';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';

@@ -16,11 +16,11 @@
 import { createApp } from 'vue';
 import PostarModal from '~/content/components/PostarModal';
 import { getReaderData } from '~/media/parser';
-import { debounce as debounceUtils } from '@gitcoffee/postbot-utils';
-import { initMessageEventListener } from '@gitcoffee/postbot-content-services';
+import { debounce as debounceUtils } from '@gitcoffee-os/postbot-utils';
+import { initMessageEventListener } from '@gitcoffee-os/postbot-content-services';
 import { handleMessage } from '~/content/services/message.services';
 import { setupI18n } from '~/locales';
-import { processContent } from '@gitcoffee/postbot-content-adapter';
+import { processContent } from '@gitcoffee-os/postbot-content-adapter';
 import { startMediaSyncMessageListener, stopMediaSyncMessageListener } from '~/utils/media';
 import { setupDebugger } from '~/content/debugger';
 import antDesignCss from 'ant-design-vue/dist/reset.css?inline';

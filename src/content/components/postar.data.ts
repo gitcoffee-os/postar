@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createState } from '@gitcoffee/postbot-stores';
+import { createState } from '@gitcoffee-os/postbot-stores';
 
 export const state = createState('postar-float-button-position');
 

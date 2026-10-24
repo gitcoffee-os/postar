@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { syncImages, downloadImage } from '@gitcoffee/postbot-media';
+import { syncImages, downloadImage } from '@gitcoffee-os/postbot-media';
 
 export { syncImages, downloadImage };

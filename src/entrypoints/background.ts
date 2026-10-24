@@ -17,7 +17,7 @@ import { initPostar } from '~/api';
 import { initPostarEvents } from '../events';
 import { initPlugins } from '../plugins';
 import { handleMessage } from '../background';
-import { createBackgroundListener } from '@gitcoffee/postbot-background';
+import { createBackgroundListener } from '@gitcoffee-os/postbot-background';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';
 
 const backgroundMain = () => {

@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getDocument, getImgElements, handleContentImage } from '@gitcoffee/postbot-media';
+import { getDocument, getImgElements, handleContentImage } from '@gitcoffee-os/postbot-media';
 
 export { getDocument, getImgElements, handleContentImage };

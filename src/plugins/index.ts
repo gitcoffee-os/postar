@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { pluginRegistry, setupInjection, PluginType, PluginBase, PublisherConfig, PluginImplementation } from '@gitcoffee/postbot-plugin-engine';
-import { publishEngine } from '@gitcoffee/postbot-publish-engine';
-import { registerEnPlatforms, platformMetas as enPlatformMetas, metaInfoList as enMetaInfoList, publisher as enPublisher } from '@gitcoffee/postbot-publisher-en';
+import { pluginRegistry, setupInjection, PluginType, PluginBase, PublisherConfig, PluginImplementation } from '@gitcoffee-os/postbot-plugin-engine';
+import { publishEngine } from '@gitcoffee-os/postbot-publish-engine';
+import { registerEnPlatforms, platformMetas as enPlatformMetas, metaInfoList as enMetaInfoList, publisher as enPublisher } from '@gitcoffee-os/postbot-publisher-en';
 
 import { platformMetas, platforms } from '~/media/platform';
 import { metaInfoList } from '~/media/meta';

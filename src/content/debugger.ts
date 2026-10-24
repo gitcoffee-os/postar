@@ -1,6 +1,6 @@
-import { createDebugger } from '@gitcoffee/postbot-publisher-debug'
-import { publisherDebugConfigs } from '@gitcoffee/postbot-publisher-en'
-import type { DebugConfig, DebuggerInstance } from '@gitcoffee/postbot-publisher-debug'
+import { createDebugger } from '@gitcoffee-os/postbot-publisher-debug'
+import { publisherDebugConfigs } from '@gitcoffee-os/postbot-publisher-en'
+import type { DebugConfig, DebuggerInstance } from '@gitcoffee-os/postbot-publisher-debug'
 
 interface PlatformPattern {
   match: (url: string) => boolean

@@ -32,12 +32,12 @@
 
 <script lang="ts" setup>
 import { ConfigProvider } from 'ant-design-vue';
-import { TabsManage } from '@gitcoffee/postbot-sidepanel-ui';
+import { TabsManage } from '@gitcoffee-os/postbot-sidepanel-ui';
 import { ensureI18n } from '~/locales';
 import iconUrl from '~/assets/icon.png';
 import { getPostarBaseUrl, getPublishPath, getCoverImageUrl, getDefaultAvatarUrl } from '~/config/config';
 import { saveExploreVersionSetting } from '~/config/setting';
-import { user, authority } from '@gitcoffee/postbot-api';
+import { user, authority } from '@gitcoffee-os/postbot-api';
 import { syncContentImages, syncSelectionImages } from '~/utils/media';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';

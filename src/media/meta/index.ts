@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { metaInfoList as enMetaInfoList } from '@gitcoffee/postbot-publisher-en';
+import { metaInfoList as enMetaInfoList } from '@gitcoffee-os/postbot-publisher-en';
 
 export const metaInfoList = enMetaInfoList;
 

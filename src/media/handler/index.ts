@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { authority } from '@gitcoffee/postbot-api';
-import { syncImages } from '@gitcoffee/postbot-media';
+import { authority } from '@gitcoffee-os/postbot-api';
+import { syncImages } from '@gitcoffee-os/postbot-media';
 
 export { getDocument, getImgElements, handleContentImage } from './image.handler';
 

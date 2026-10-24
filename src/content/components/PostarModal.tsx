@@ -16,7 +16,7 @@
 import { h, defineComponent, inject } from 'vue'
 import { StyleProvider } from 'ant-design-vue/es/_util/cssinjs'
 import { ConfigProvider } from 'ant-design-vue'
-import { createModal } from '@gitcoffee/postbot-content-ui'
+import { createModal } from '@gitcoffee-os/postbot-content-ui'
 import PostarFloatButton from './PostarFloatButton'
 import { getReaderData } from '~/media/parser'
 import { state } from './postar.data';

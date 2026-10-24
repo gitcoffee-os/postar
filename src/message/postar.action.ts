@@ -13,4 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { POSTBOT_ACTION as POSTAR_ACTION, MEDIA_SYNC_ACTION, CONTENT_ACTION, CONTEXT_MENU_ACTION } from '@gitcoffee/postbot-actions';
+export { POSTBOT_ACTION as POSTAR_ACTION, MEDIA_SYNC_ACTION, CONTENT_ACTION, CONTEXT_MENU_ACTION } from '@gitcoffee-os/postbot-actions';

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createFloatButton } from '@gitcoffee/postbot-content-ui';
+import { createFloatButton } from '@gitcoffee-os/postbot-content-ui';
 import { useTranslation } from '~/locales';
 import iconUrl from '~/assets/icon.png';
 

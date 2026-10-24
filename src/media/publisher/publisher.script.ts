@@ -1,5 +1,5 @@
-import { publisherEntries } from '@gitcoffee/postbot-publisher-en'
-import type { PublisherEntry, DebugConfig } from '@gitcoffee/postbot-publisher-debug'
+import { publisherEntries } from '@gitcoffee-os/postbot-publisher-en'
+import type { PublisherEntry, DebugConfig } from '@gitcoffee-os/postbot-publisher-debug'
 
 export { publisherEntries }
 

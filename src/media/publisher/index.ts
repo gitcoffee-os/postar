@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { publish } from '@gitcoffee/postbot-media';
+import { publish } from '@gitcoffee-os/postbot-media';
 import { createTabsForPlatformsWithScript } from '~/tabs';
 import { getMetaInfoList } from '../meta';
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTabsForPlatforms, tabsState } from '@gitcoffee/postbot-tabs';
+import { createTabsForPlatforms, tabsState } from '@gitcoffee-os/postbot-tabs';
 import { executeScriptsToTabs } from '~/media/publisher/publisher.script';
 
 export { tabsState };

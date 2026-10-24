@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { setApiConfig, user, authority } from '@gitcoffee/postbot-api';
+import { setApiConfig, user, authority } from '@gitcoffee-os/postbot-api';
 import { getPostarBaseUrl, getPostarBaseApi, appId, getDefaultTrustedDomain } from '~/config/config';
 import { getTrustedDomains, setTrustedDomains } from '~/stores';
 
@@ -48,5 +48,5 @@ export const startPostar = async (intervalTime: number) => {
   authority.client.updateApi({});
 };
 
-export { setApiConfig } from '@gitcoffee/postbot-api';
-export { user, authority } from '@gitcoffee/postbot-api';
+export { setApiConfig } from '@gitcoffee-os/postbot-api';
+export { user, authority } from '@gitcoffee-os/postbot-api';

@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 
-import { platformMetas as enPlatformMetas } from '@gitcoffee/postbot-publisher-en';
+import { platformMetas as enPlatformMetas } from '@gitcoffee-os/postbot-publisher-en';
 
 export const platformMetas = reactive(enPlatformMetas);
 
