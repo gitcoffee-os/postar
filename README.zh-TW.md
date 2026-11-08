@@ -1,7 +1,7 @@
 <p align="center">
 	<img alt="logo" src="https://postar.exmay.com/docs/images/postar_logo.svg" width="150" height="150">
 </p>
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar 內容同步助手 v1.2.0</h1>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Postar 內容同步助手 v1.3.0</h1>
 <h4 align="center">
 	一款開源的國際多平臺內容同步分發生產力工具。
 	<br />

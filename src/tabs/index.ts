@@ -19,6 +19,10 @@ import { executeScriptsToTabs } from '~/media/publisher/publisher.script';
 export { tabsState };
 
 export const createTab = async (url: string) => {
+    if (!url) {
+        console.warn('createTab: url is null or undefined');
+        return null;
+    }
     return await chrome.tabs.create({ url });
 }
 

@@ -67,6 +67,7 @@ export default defineConfig({
       'clipboardRead',
       'downloads',
       'management',
+      'debugger',
       'background'
     ],
     host_permissions: [

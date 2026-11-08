@@ -17,8 +17,11 @@ import { initPostar } from '~/api';
 import { initPostarEvents } from '../events';
 import { initPlugins } from '../plugins';
 import { handleMessage } from '../background';
+import { initCdpBackground } from '../background/cdp.background';
+import { initAdapterBackground } from '../background/adapter.background';
 import { createBackgroundListener } from '@gitcoffee-os/postbot-background';
 import { getPostarBaseUrl, getPublishPath } from '~/config/config';
+import { bridgeProfile } from '~/message/bridge.profile';
 
 const backgroundMain = () => {
   console.log('Postar background script loaded');
@@ -76,7 +79,15 @@ const backgroundMain = () => {
     });
   });
 
-  createBackgroundListener(handleMessage);
+  createBackgroundListener(handleMessage, bridgeProfile);
+
+  // CDP 上传/点击（chrome.debugger，需 manifest debugger 权限）
+  initCdpBackground();
+
+  // AI 自适应修复后台模块（同步中心 / 诊断 / 补丁决策）
+  initAdapterBackground().catch((error) => {
+    console.error('[AiAdapter] 后台自适应模块初始化失败:', error);
+  });
 };
 
 export default {

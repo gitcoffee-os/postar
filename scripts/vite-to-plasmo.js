@@ -122,21 +122,31 @@ function updateManifest() {
   // 如果manifest.json不存在，创建一个基本的manifest.json文件
   if (!fs.existsSync(manifestPath)) {
     console.warn(`⚠️ manifest.json not found at ${manifestPath}, creating a new one`);
+    // 版本统一来源于 package.json（与 WXT 路径的 pkg.version 保持一致）
+    let pkgVersion = '1.0.0';
+    try {
+      const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'));
+      if (pkg.version) pkgVersion = pkg.version;
+    } catch (err) {
+      console.warn('⚠️ 读取 package.json 版本失败，回退 1.0.0:', err.message);
+    }
     const baseManifest = {
       manifest_version: 3,
       name: 'Postar - Content Sync Assistant',
-      version: '1.0.0',
+      version: pkgVersion,
       description: 'Postar - International Content Sync Assistant',
       permissions: [
         'storage',
         'activeTab',
         'tabs',
+        'tabGroups',
         'scripting',
         'sidePanel',
         'contextMenus',
         'clipboardRead',
         'downloads',
         'management',
+        'debugger',
         'background'
       ],
       host_permissions: [
@@ -164,6 +174,19 @@ function updateManifest() {
   }
 
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+  // 权限合并：旧 manifest 可能缺新增权限（如 debugger），统一补齐，保证 WXT 与 Plasmo 双路径一致
+  const REQUIRED_PERMISSIONS = ['tabGroups', 'debugger'];
+  if (!Array.isArray(manifest.permissions)) {
+    manifest.permissions = [];
+  }
+  for (const perm of REQUIRED_PERMISSIONS) {
+    if (!manifest.permissions.includes(perm)) {
+      manifest.permissions.push(perm);
+      console.log(`✓ Added missing permission: ${perm}`);
+    }
+  }
+
   const backgroundScript = getBackgroundScript();
   const contentScript = getContentScript();
 

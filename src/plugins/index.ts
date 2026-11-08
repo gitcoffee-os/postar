@@ -15,11 +15,14 @@
  */
 import { pluginRegistry, setupInjection, PluginType, PluginBase, PublisherConfig, PluginImplementation } from '@gitcoffee-os/postbot-plugin-engine';
 import { publishEngine } from '@gitcoffee-os/postbot-publish-engine';
-import { registerEnPlatforms, platformMetas as enPlatformMetas, metaInfoList as enMetaInfoList, publisher as enPublisher } from '@gitcoffee-os/postbot-publisher-en';
+import { registerEnPlatforms, platformMetas as enPlatformMetas, metaInfoList as enMetaInfoList, publisher as enPublisher, publisherDebugConfigs as enPublisherDebugConfigs } from '@gitcoffee-os/postbot-publisher-en';
+import { createAiAdapterPlugin } from '@gitcoffee-os/postbot-ai-adapter';
+import type { DebugConfigLike } from '@gitcoffee-os/postbot-ai-adapter';
 
 import { platformMetas, platforms } from '~/media/platform';
 import { metaInfoList } from '~/media/meta';
 import { publisher } from '~/media/publisher/publisher.script';
+import { getAdapterRegistry } from '~/ai-adapter/adapter.shared';
 
 const pluginBaseEn: PluginBase = {
   code: 'en',
@@ -52,7 +55,7 @@ const enPlugin = {
   modules: {
     platform: { platformMetas: enPlatformMetas },
     meta: { metaInfoList: enMetaInfoList },
-    publisher: { publisher: enPublisher }
+    publisher: { publisher: enPublisher, publisherDebugConfigs: enPublisherDebugConfigs }
   }
 };
 
@@ -67,6 +70,27 @@ export const initPlugins = () => {
   pluginRegistry.register(pluginBaseEn, pluginConfigEn, pluginImplementationEn, enPlugin.modules);
 
   pluginImplementationEn.initialize();
+
+  // AI 自适应插件：用存量调试配置建立基线（幂等），与 content/background 各上下文共享 registry
+  try {
+    const aiAdapterPlugin = createAiAdapterPlugin({
+      debugConfigs: enPublisherDebugConfigs as Record<string, DebugConfigLike>,
+      registry: getAdapterRegistry(),
+    });
+
+    pluginRegistry.register(
+      aiAdapterPlugin.base,
+      aiAdapterPlugin.config,
+      aiAdapterPlugin.implementation,
+      aiAdapterPlugin.modules,
+    );
+
+    aiAdapterPlugin.implementation.initialize?.().catch((error: any) => {
+      console.error('AI 自适应插件初始化失败:', error);
+    });
+  } catch (error) {
+    console.error('AI 自适应插件注册失败:', error);
+  }
 
   console.log(`Postar: EN publisher plugin initialized`);
 };

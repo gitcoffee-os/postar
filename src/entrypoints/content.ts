@@ -18,11 +18,15 @@ import PostarModal from '~/content/components/PostarModal';
 import { getReaderData } from '~/media/parser';
 import { debounce as debounceUtils } from '@gitcoffee-os/postbot-utils';
 import { initMessageEventListener } from '@gitcoffee-os/postbot-content-services';
+import { BRIDGE_PROTOCOL_VERSION } from '@gitcoffee-os/postbot-content-services';
+import { bridgeProfile } from '~/message/bridge.profile';
 import { handleMessage } from '~/content/services/message.services';
+import { POSTAR_ACTION } from '~/message/postar.action';
 import { setupI18n } from '~/locales';
 import { processContent } from '@gitcoffee-os/postbot-content-adapter';
 import { startMediaSyncMessageListener, stopMediaSyncMessageListener } from '~/utils/media';
 import { setupDebugger } from '~/content/debugger';
+import { initAdapterService } from '~/content/services/adapter.service';
 import antDesignCss from 'ant-design-vue/dist/reset.css?inline';
 import globalCss from '~/styles/global.css?inline';
 
@@ -128,10 +132,15 @@ const showUpdateBanner = (shadowRoot: ShadowRoot) => {
 
 export default {
   matches: ['<all_urls>'],
+  // 兄弟 App 站点不注入：不挂浮窗、不监听页面消息（channel/origin 闸是第二层）
+  excludeMatches: ['*://postbot.exmay.com/*', '*://postbot-dev.exmay.com/*'],
   main() {
-    initMessageEventListener();
-    startMediaSyncMessageListener();
+    initMessageEventListener(bridgeProfile);
+    startMediaSyncMessageListener(bridgeProfile);
     setupDebugger();
+
+    // AI 自适应修复模块：观测当前页面发布表单健康度，平台改版自动修复
+    void initAdapterService();
 
     const host = document.createElement('div');
     host.id = 'postar-host';
@@ -246,6 +255,18 @@ export default {
         showUpdateBanner(shadowRoot);
         return true;
       }
+      // 自动发布终态中继（M3 路径 D）：background 汇总各平台结果 → 本 content script → 发布页 window.postMessage。
+      // 页面侧由桌面注入的监听脚本捕获，经 renderer 上报 engine（桌面 WebContentsView 无 preload，只能走页面消息）。
+      if (request?.action === POSTAR_ACTION.AUTOPUBLISH_RESULT) {
+        try {
+          relayAutopublishResult(request.data, request.traceId);
+          sendResponse({ ok: true });
+        } catch (err) {
+          console.warn('[Postar] AUTOPUBLISH_RESULT 中继失败:', err);
+          sendResponse({ ok: false });
+        }
+        return true;
+      }
       handleMessage(request, sender, sendResponse);
       return true;
     });
@@ -254,5 +275,51 @@ export default {
       clearInterval(contextCheckInterval);
       stopMediaSyncMessageListener();
     });
+
+    // ===== 自动发布终态存储桥（路径 D 关键通道）=====
+    // background 交付终态时写入 chrome.storage.local；本 content script 经 onChanged
+    // 中继回发布页 window。Electron 下 WebContentsView 非真实 chrome.tabs.Tab，
+    // tabs.sendMessage/query 不可达，此通道为唯一可靠回传路径（Chrome 中与 tabs 通道并存）。
+    const AUTOPUBLISH_LATEST_KEY = 'autopublish-result:latest';
+    /** 启动补偿只中继近期结果，避免页面重载时回放陈旧终态（页面侧按 jobId 过滤，双保险） */
+    const STALE_RESULT_WINDOW_MS = 10 * 60 * 1000;
+
+    try {
+      chrome.storage.onChanged.addListener((changes, areaName) => {
+        if (areaName !== 'local') return;
+        const change = changes[AUTOPUBLISH_LATEST_KEY];
+        if (change?.newValue) {
+          relayAutopublishResult(change.newValue);
+        }
+      });
+
+      // 启动补偿：content script 注入晚于终态落库时（如页面加载慢），补中继一次
+      chrome.storage.local.get(AUTOPUBLISH_LATEST_KEY, (items) => {
+        const latest = items?.[AUTOPUBLISH_LATEST_KEY] as { deliveredAt?: number } | undefined;
+        if (latest && typeof latest.deliveredAt === 'number' && Date.now() - latest.deliveredAt < STALE_RESULT_WINDOW_MS) {
+          relayAutopublishResult(latest);
+        }
+      });
+    } catch (err) {
+      console.warn('[Postar] AUTOPUBLISH_RESULT 存储桥初始化失败:', err);
+    }
+  }
+};
+
+// AUTOPUBLISH_RESULT 统一中继：tabs 消息与存储桥共用，回传发布页 window
+const relayAutopublishResult = (result: unknown, traceId?: string): void => {
+  try {
+    window.postMessage({
+      type: 'response',
+      protocolVersion: BRIDGE_PROTOCOL_VERSION,
+      channel: bridgeProfile.channel,
+      traceId,
+      action: POSTAR_ACTION.AUTOPUBLISH_RESULT,
+      code: 0,
+      message: 'success',
+      data: result,
+    }, '*');
+  } catch (err) {
+    console.warn('[Postar] AUTOPUBLISH_RESULT 存储桥中继失败:', err);
   }
 };

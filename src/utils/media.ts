@@ -16,6 +16,8 @@
 import { getPostarBaseUrl } from '~/config/config';
 import { image, media } from '@gitcoffee-os/postbot-utils';
 import type { ImageData, ProcessedImage } from '@gitcoffee-os/postbot-utils';
+import { checkBridgeRequest, createBridgeResponse, normalizeOrigin } from '@gitcoffee-os/postbot-content-services';
+import type { BridgeProfile } from '@gitcoffee-os/postbot-content-services';
 
 export type { ImageData, ProcessedImage };
 export const { isValidOrigin, extractFilenameFromUrl, getImageType, fetchImageAsBlob, processImages, uploadQueueManager, getUploadQueueImages, markUploadComplete, MEDIA_SYNC_ACTION } = { ...image, ...media };
@@ -67,20 +69,22 @@ export const syncSelectionImages = async (selectionImages: ImageData[], tabId: n
   return syncImagesToMediaLibrary(selectionImages, tabId);
 };
 
-export const handleGetSyncImages = async (request: any, event: MessageEvent) => {
+export const handleGetSyncImages = async (request: any, event: MessageEvent, profile?: BridgeProfile) => {
   console.log('[MediaSync] Handling get sync images request, syncId:', request.data?.syncId);
+
+  const targetOrigin = normalizeOrigin(event.origin);
+  const reply = (data: any, code = 0, message = 'success') => {
+    if (!targetOrigin || !profile) return;
+    (event.source as WindowProxy)?.postMessage(
+      createBridgeResponse(request, data, profile, { code, message }),
+      targetOrigin,
+    );
+  };
 
   const syncId = request.data?.syncId;
   if (!syncId) {
     console.warn('[MediaSync] No syncId provided');
-    event.source?.postMessage({
-      type: 'response',
-      traceId: request.traceId,
-      action: request.action,
-      code: 400,
-      message: 'No syncId provided',
-      data: null
-    });
+    reply(null, 400, 'No syncId provided');
     return;
   }
 
@@ -91,16 +95,9 @@ export const handleGetSyncImages = async (request: any, event: MessageEvent) => 
 
     const validImages = queueImages.filter(img => img.data);
 
-    event.source?.postMessage({
-      type: 'response',
-      traceId: request.traceId,
-      action: request.action,
-      code: 0,
-      message: 'success',
-      data: {
-        images: validImages,
-        syncId: syncId
-      }
+    reply({
+      images: validImages,
+      syncId: syncId
     });
     return;
   }
@@ -109,38 +106,37 @@ export const handleGetSyncImages = async (request: any, event: MessageEvent) => 
     const images = result[syncId] || [];
     console.log('[MediaSync] Got images from storage:', images.length);
 
-    event.source?.postMessage({
-      type: 'response',
-      traceId: request.traceId,
-      action: request.action,
-      code: 0,
-      message: 'success',
-      data: {
-        images: images,
-        syncId: syncId
-      }
+    reply({
+      images: images,
+      syncId: syncId
     });
   });
 };
 
 let messageEventHandler: ((event: MessageEvent) => void) | null = null;
 
-export const startMediaSyncMessageListener = () => {
+export const startMediaSyncMessageListener = (profile: BridgeProfile) => {
   messageEventHandler = async (event: MessageEvent) => {
+    // Only handle messages from the current page itself
+    if (event.source !== window) return;
+
     const request = event.data;
 
-    if (request?.type !== 'request' || !request?.action) {
+    if (request?.type === 'response' || request?.type === undefined || !request?.action) {
       return;
     }
 
-    if (!isValidOrigin(event.origin)) {
-      console.warn('[MediaSync] Untrusted origin:', event.origin);
+    if (request.action !== media.MEDIA_SYNC_ACTION.GET_SYNC_IMAGES) {
       return;
     }
 
-    if (request.action === media.MEDIA_SYNC_ACTION.GET_SYNC_IMAGES) {
-      await handleGetSyncImages(request, event);
+    // Same gate as the main bridge: only the extension whose channel matches responds
+    const decision = checkBridgeRequest(request, event.origin, profile);
+    if (!decision.accept) {
+      return;
     }
+
+    await handleGetSyncImages(request, event, profile);
   };
 
   window.addEventListener('message', messageEventHandler);

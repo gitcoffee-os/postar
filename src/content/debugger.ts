@@ -28,6 +28,19 @@ const PLATFORM_URL_PATTERNS: PlatformPattern[] = [
 
 let debugInstance: DebuggerInstance | null = null
 
+/**
+ * URL -> schemaKey（publisherDebugConfigs 索引）映射，供 AI 自适应修复模块
+ * （adapter.service）定位当前页面对应的观测 schema。
+ */
+export function matchPlatformKey(url: string): string | null {
+  for (const p of PLATFORM_URL_PATTERNS) {
+    if (p.match(url)) {
+      return p.key
+    }
+  }
+  return null
+}
+
 export function setupDebugger(): void {
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {

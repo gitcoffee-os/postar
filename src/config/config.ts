@@ -22,8 +22,31 @@ interface PostarConfig {
   defaultAvatarUrl: string;
 }
 
+/**
+ * 云端 Web 子域环境（子域名方案，与 postbot / desktop 的 EXMAY_WEB_ENV 对齐）：
+ * - prod（默认）: postar.exmay.com（公网生产，终端用户扩展构建用这个）
+ * - dev         : postar-dev.exmay.com（开发联调，构建时注入 VITE_EXMAY_WEB_ENV=dev）
+ * 必须用同级子域（postar-dev 而非 dev.postar）以命中 `*.exmay.com` 通配符证书。
+ * Vite/WXT 编译期静态替换 import.meta.env.VITE_*；运行时无该变量时安全兜底 prod。
+ * __POSTAR_CONFIG__ 仍具最高覆盖优先级。
+ */
+type ExmayWebEnv = 'dev' | 'prod';
+
+const resolveExmayWebEnv = (): ExmayWebEnv => {
+  try {
+    const env =
+      (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_EXMAY_WEB_ENV) ||
+      (typeof process !== 'undefined' && process.env?.EXMAY_WEB_ENV);
+    return env === 'dev' ? 'dev' : 'prod';
+  } catch {
+    return 'prod';
+  }
+};
+
+const exmayWebHost = resolveExmayWebEnv() === 'dev' ? 'postar-dev.exmay.com' : 'postar.exmay.com';
+
 const defaultConfig: PostarConfig = {
-  baseUrl: 'https://postar.exmay.com',
+  baseUrl: `https://${exmayWebHost}`,
   baseApiPath: '/exmay/authority/api',
   publishPath: '/exmay/postbot/media/publish',
   defaultTrustedDomain: 'exmay.com',
